@@ -185,7 +185,9 @@ app.post("/listings/:id/reviews", validateReview, wrapAsync(async (req,res)=>{
 app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
     let {id, reviewId} = req.params;
     await Review.findByIdAndDelete(reviewId);
-    // await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
+    //arrage se jake delete
+    //we use mongo ka pull operator to remove the reviewId from the reviews array in the listing document
+    await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
     res.redirect(`/listings/${id}`);
 }));
 
