@@ -1,0 +1,47 @@
+<%layout("./layouts/boilerplate")%>
+
+    <h3>All Places</h3>
+    <!-- <form methog="GET" action="/listings/new">
+        <button>Create New List</button>
+    </form> -->
+
+<div class="row">
+
+<% for(let listing of allListings){ %>
+
+<div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+
+    <a href="/listings/<%= listing._id %>" class="listing-link">
+
+        <div class="card h-100">
+
+            <!-- <p><%= listing.image.url %></p> -->
+             <!-- <pre><%= JSON.stringify(listing.image, null, 2) %></pre> -->
+            <img
+                src="<%= listing.image.url %>"
+                class="card-img-top"
+                alt="listing_image"
+                style="height:20rem; object-fit:cover;"
+            >
+
+
+            <!-- <p><%= JSON.stringify(listing.image) %></p> -->
+            <div class="card-img-overlay"></div>
+            <div class="card-body">
+                <p class="card-text">
+                    <b><%= listing.title %></b><br>
+                    ₹<%= listing.price.toLocaleString("en-IN") %> / night
+                </p>
+            </div>
+            
+
+        </div>
+
+    </a>
+
+</div>
+
+<% } %>
+
+</div>
+
