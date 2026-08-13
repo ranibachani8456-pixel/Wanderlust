@@ -7,11 +7,17 @@ const cookieParser=require("cookie-parser");
 //to use cookie parser middleware
 app.use(cookieParser("secretcode"));
 
+//we can store small amt of info only in cookies
 //but we can actually tamper the cookies - so we sign cookies to make them secure and not tamperable
 //basically we can set properties
 app.get("/getsignedcookies",(req,res)=>{
     res.cookie("made_in","India",{signed:true});
     res.send("sent some signed cookies");
+})
+
+//to access all of ths better we use middleware
+app.use((req,res,next)=>{
+    
 })
 
 //verify signed cookies - 

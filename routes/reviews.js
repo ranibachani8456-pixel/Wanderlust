@@ -52,6 +52,7 @@ router.post("/:id/reviews", validateReview, wrapAsync(async (req,res)=>{
     listing.reviews.push(newReview);
     await listing.save();
     console.log("review saved")
+    req.flash("success","Successfully made a new review");
     res.redirect(`/listings/${id}`);
 }));
 
@@ -62,9 +63,11 @@ router.delete("/:id/reviews/:reviewId", wrapAsync(async (req, res) => {
     //arrage se jake delete
     //we use mongo ka pull operator to remove the reviewId from the reviews array in the listing document
     await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
+    req.flash("success","Successfully deleted the review");
     res.redirect(`/listings/${id}`);
 }));
 
 module.exports = router;
+
 
 
