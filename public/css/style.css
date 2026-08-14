@@ -235,3 +235,33 @@ body{
 .delete-review-form button {
     margin: 0;
 }
+
+/* sign up */
+.card {
+    background: #ffffff;
+}
+
+.form-control {
+    border: 1px solid #dee2e6;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: #212529;
+    box-shadow: 0 0 0 0.2rem rgba(33, 37, 41, 0.1);
+}
+
+.form-control::placeholder {
+    color: #adb5bd;
+}
+
+.btn-dark {
+    border-radius: 10px;
+    padding: 12px;
+    transition: all 0.2s ease;
+}
+
+.btn-dark:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}

@@ -10,6 +10,10 @@ const expressErrors=require("./utils/expressErrors.js");
 const session=require("express-session");
 const flash=require("connect-flash");
 
+const passport=require("passport");
+const LocalStrategy=require("passport-local");
+const User=require("./models/user.js");
+
 const {listingSchema}=require("./schema.js");
 const Review = require("./models/review");
 const {reviewSchema}=require("./schema.js");
@@ -38,8 +42,20 @@ app.get("/",(req,res)=>{
     res.send("Hi, I'm Root");
 })
 
+// app.use(session(sessionOptions));
+//ek hi session we cant use multiple times, so we need to use it before passport.initialize() and passport.session()
 app.use(flash());
 
+//session code ke baad
+app.use(passport.initialize());
+//ek session we cant use multiple times, so we need to use it before passport.initialize() and passport.session()
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+//to authenticate user in local strategy
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+//serialise user and deserialise user i.e storing user(info) in session and retrieving user from session
 
 app.use((req,res,next)=>{
     res.locals.success=req.flash("success");
@@ -50,8 +66,23 @@ app.use((req,res,next)=>{
     //we'll add success message in index.ejs bcs it's getting redirected to index.ejs after creating a new listing
 })
 
-const listings=require("./routes/listing.js");
-const review = require("./routes/reviews.js");
+//Register user
+app.get("/demoUser",async (req,res)=>{
+    let fakeUser = new User({
+        username:"demoUser",
+        //check by itself if username is unique or not, if not then it will throw an error
+        email:"student@gmail.com"
+    });
+    let registeredUser = await User.register(fakeUser,"hellowWorld");
+    res.send(registeredUser);
+
+});
+
+
+
+const listingsRouter=require("./routes/listing.js");
+const reviewRouter = require("./routes/reviews.js");
+const userRouter=require("./routes/signUser.js");
 
 app.set("view engine","ejs");
 app.set("views",path.join(__dirname,"views"));
@@ -79,14 +110,19 @@ async function main(){
 //validate review added to reviews.js and listing.js
 
 //restructuring the routes to make it more readable and maintainable
-app.use("/listings",listings);
+app.use("/listings",listingsRouter);
 
 
 //review routes
-app.use("/listings",review);
+app.use("/listings",reviewRouter);
+
+//sign up user
+app.use("/",userRouter);
 
 
 //show reviews route
+
+
 
 
 //page not found response
