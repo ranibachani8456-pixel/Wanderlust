@@ -1,12 +1,13 @@
 const express=require("express");
 const router=express.Router();
+const { isLoggedin } = require("../middleware.js");
 
 //requiring all middlewares amd models
 const wrapAsync=require("../utils/wrapAsync.js");
 const {listingSchema, reviewSchema}=require("../schema.js");
 const expressErrors=require("../utils/expressErrors.js");
 const Listing=require("../models/listing.js");
-
+const Review=require("../models/review.js");
 
 
 //saare validations ko we want to convert to middleware form
@@ -50,8 +51,11 @@ router.get("/",wrapAsync(async (req,res)=>{
 // });
 
 //new route
-router.get("/new",wrapAsync(async(req,res)=>{
-    res.render("./listings/new.ejs")
+router.get("/new",isLoggedin,wrapAsync(async(req,res)=>{
+    //to store user related information in req.user we need to use passport and session
+    console.log(req.user);
+
+    res.render("./listings/new.ejs");
 }))
 
 
@@ -103,7 +107,7 @@ router.post("/",validateListing,wrapAsync(async(req,res,next)=>{
 }))
 
 //edit route 
-router.get("/:id/edit",wrapAsync(async(req,res)=>{
+router.get("/:id/edit",isLoggedin,wrapAsync(async(req,res)=>{
     let {id}=req.params;
     const listing=await Listing.findById(id);
     if(!listing){
@@ -114,7 +118,7 @@ router.get("/:id/edit",wrapAsync(async(req,res)=>{
 }))
 
 //update route
-router.put("/:id",validateListing,wrapAsync(async(req,res)=>{
+router.put("/:id",isLoggedin,validateListing,wrapAsync(async(req,res)=>{
     //validate listing daal diya hai
     // if(!req.body.listing) throw new expressErrors("Invalid Listing Data",400);
     let {id}=req.params;
@@ -124,7 +128,7 @@ router.put("/:id",validateListing,wrapAsync(async(req,res)=>{
 }))
 
 //delete route
-router.delete("/:id",wrapAsync(async(req,res)=>{
+router.delete("/:id",isLoggedin,wrapAsync(async(req,res)=>{
     let {id}=req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
     console.log(deletedListing);

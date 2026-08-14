@@ -62,6 +62,8 @@ app.use((req,res,next)=>{
     // console.log(res.locals.success);
     // console.log(res.locals.error);
     res.locals.error=req.flash("error");
+    res.locals.currentUser=req.user;
+    //cuz req.user ko directly access nahi kar sakte in ejs files, so we need to make it available in res.locals
     next();
     //we'll add success message in index.ejs bcs it's getting redirected to index.ejs after creating a new listing
 })
